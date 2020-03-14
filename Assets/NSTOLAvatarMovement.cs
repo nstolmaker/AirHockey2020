@@ -11,10 +11,12 @@ public class NSTOLAvatarMovement : MonoBehaviour
     public float rotationSpeed = 100.0f;
     [Tooltip("Valid options are left and right. Case sensitive.")]
     public string hand;
+    private Transform forwardDirection;
+    float yRotation;
 
     void Start()
     {
-        
+        forwardDirection = avatar.transform.Find("Head").transform;
     }
 
     // Update is called once per frame
@@ -39,15 +41,22 @@ public class NSTOLAvatarMovement : MonoBehaviour
         Vector2 scaledOvrinput = ovrinput * speed * Time.deltaTime;
         float xAxis = scaledOvrinput.x;
         float yAxis = scaledOvrinput.y;
-        Vector3 movementAmount = new Vector3(0f, xAxis, yAxis);
+
         //rotation *= Time.deltaTime;
         //float rotation = Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical") * rotationSpeed;
-        if (ovrinput != new Vector2() && ovrinput != new Vector2())
-        {
-            Debug.Log("got x and y axis for " + hand + " hand controller: " + movementAmount.ToString());
-        }
+        //if (ovrinput != new Vector2() && ovrinput != new Vector2())
+        //{
+        //    Debug.Log("got x and y axis for " + hand + " hand controller: " + new Vector3(0f, xAxis, yAxis).ToString());
+        //}
+
         // Move translation along the object's z-axis
+        yRotation = Time.deltaTime * forwardDirection.transform.rotation.eulerAngles.y;
+        //avatar.rotation.eulerAngles.y = Quaternion.Euler(0, yRotation, 0);
+        avatar.SetPositionAndRotation(new Vector3(xAxis, 0f, yAxis), forwardDirection.transform.rotation);
+        //yAxis += Time.deltaTime * 10;
+        //xAxis += Time.deltaTime * 10;
         avatar.transform.Translate(xAxis, 0f, yAxis);
+
         ovrinput = new Vector2();
     }
 }
